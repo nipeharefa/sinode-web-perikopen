@@ -2,9 +2,10 @@ import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import React, { Component } from 'react';
 import UIkit from 'uikit';
-import { SingleDatePicker } from 'react-dates';
 import HomeStyled from './pages/Home/style';
-import "./App.css"
+// import "./App.css"
+import { GetPerikopenByDate } from './service/perikopen';
+import DatePicker from './component/DatePicker';
 
 const {
   ContainerReadlist,
@@ -29,15 +30,48 @@ class App extends Component {
       startDate: null,
       endDate: null,
       focused: false,
+      activePerikopen: {
+        id: 0,
+        week: {
+          id: 0,
+          code: "new_year"
+        },
+        worship: {
+          id: 0,
+          key: 'new_year'
+        }
+      },
     };
   }
   componentDidMount() {
-    // console.log(UIkit.modal('#my-id'));
+
+    this.getInitialPerikopen()
+
   }
-  handleDatePick = async() => {
-    // console.log()
-    // alert();
-    UIkit.modal('#my-id').hide();
+  getInitialPerikopen = async() => {
+    try {
+      const result = await GetPerikopenByDate('2019-01-01 00:00:00')
+      if (result.data.length > 0) {
+        this.setState({
+          activePerikopen: result.data[0]
+        })
+      }
+      console.log(result)
+    } catch(e) {
+
+    }
+  }
+  handleDatePick = async(x) => {
+    try {
+
+      const data = x.format('YYYY-MM-DD 00:00:00')
+      const result = await GetPerikopenByDate(data)
+      if (result.data.length > 0) {
+        this.setState({
+          activePerikopen: result.data[0]
+        })
+      }
+    } catch(e) {}
   }
   render() {
     const arrayBacaan = [
@@ -68,8 +102,8 @@ class App extends Component {
             <span>JAN</span>
           </InfoDate>
           <div className="uk-flex uk-flex-column uk-height-1-1">
-            <span>Tahun Baru</span>
-            <span>Ephipanias</span>
+            <span>{ this.state.activePerikopen.week.code }</span>
+            <span>{ this.state.activePerikopen.worship.key }</span>
           </div>
         </HeadInfo>
 
@@ -127,27 +161,13 @@ class App extends Component {
         <FabButton onClick={() => this.setState({ focused: true })}>+</FabButton>
         <div id="my-id" data-uk-modal="true">
           <div className="uk-modal-dialog uk-modal-body">
-              <h2 className="uk-modal-title">Headline</h2>
-              <p>Lorem ipsum dolor sit amet, .</p>
               <div>
-                <SingleDatePicker
-          date={this.state.startDate}
-          onDateChange={(x) => console.log(x)}
-          focused={this.state.focused}
-          onFocusChange={({focused}) => { this.setState({ focused })}}
-          id="your_unique_id"
-          enableOutsideDays={false}
-          numberOfMonths={1}
-          withFullScreenPortal={true}
-        />
-
+                <DatePicker
+                  onFocusChange={({focused}) => { this.setState({ focused })}}
+                  handleDatePick={this.handleDatePick}
+                  focused={this.state.focused}
+                />
               </div>
-              <p className="uk-text-right">
-                  <button
-                    onClick={this.handleDatePick}
-                    className="uk-button uk-button-primary"
-                    type="button">Save</button>
-              </p>
           </div>
         </div>
       </div>
