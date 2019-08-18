@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@perikopen/component": "^1.0",
     "axios": "^0.19.0",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
@@ -27,5 +28,9 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
+  ],
+  "workspaces": [
+    "packages/*",
+    "src/*"
   ]
 }

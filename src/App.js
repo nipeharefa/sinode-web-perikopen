@@ -1,11 +1,10 @@
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import React, { Component } from 'react';
-import UIkit from 'uikit';
 import HomeStyled from './pages/Home/style';
-// import "./App.css"
 import { GetPerikopenByDate } from './service/perikopen';
 import DatePicker from './component/DatePicker';
+import { SongList } from './component'
 
 const {
   ContainerReadlist,
@@ -14,11 +13,6 @@ const {
   FabButton,
   InfoDate,
   BookName,
-  SongSpanContainer,
-  SongContainer,
-  SongName,
-  Song,
-  SongSpanNumber,
   Subsection,
   Verse,
 } = HomeStyled;
@@ -44,9 +38,7 @@ class App extends Component {
     };
   }
   componentDidMount() {
-
     this.getInitialPerikopen()
-
   }
   getInitialPerikopen = async() => {
     try {
@@ -56,10 +48,7 @@ class App extends Component {
           activePerikopen: result.data[0]
         })
       }
-      console.log(result)
-    } catch(e) {
-
-    }
+    } catch(e) {}
   }
   handleDatePick = async(x) => {
     try {
@@ -128,35 +117,9 @@ class App extends Component {
               ))}
             </ContainerReadlist>
           </div>
-          <SongContainer>
-            <span>Kidung Pujian</span>
-            {/* Kidung Jemaat */}
-            <Song className="uk-flex">
-              <SongName className="uk-width-2-3">
-                <span>Kidung Jemaat</span>
-              </SongName>
-              <SongSpanContainer className="uk-flex uk-width-1-1">
-                <SongSpanNumber>10</SongSpanNumber>
-                <SongSpanNumber>10</SongSpanNumber>
-                <SongSpanNumber>10</SongSpanNumber>
-                <SongSpanNumber>10</SongSpanNumber>
-              </SongSpanContainer>
-            </Song>
-            {/* Buku Zinuno */}
-            <Song className="uk-flex">
-              <SongName className="uk-width-2-3">
-                <span>Buku Zinuno</span>
-              </SongName>
-              <SongSpanContainer className="uk-flex uk-width-1-1">
-                <SongSpanNumber>9</SongSpanNumber>
-                <SongSpanNumber>9</SongSpanNumber>
-                <SongSpanNumber>9</SongSpanNumber>
-                <SongSpanNumber>9</SongSpanNumber>
-                <SongSpanNumber>9</SongSpanNumber>
-                <SongSpanNumber>9</SongSpanNumber>
-              </SongSpanContainer>
-            </Song>
-          </SongContainer>
+
+          {/* SongList Below */}
+          <SongList perikopenId={this.state.activePerikopen.id} />
         </div>
         <FabButton onClick={() => this.setState({ focused: true })}>+</FabButton>
         <div id="my-id" data-uk-modal="true">
