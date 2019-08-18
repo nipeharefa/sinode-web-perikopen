@@ -8,8 +8,8 @@ class SongComponent extends React.PureComponent
 {
   render() {
 
-    const SongSpanNumbers = () => this.props.datasource.map(songNumber => {
-      const key = `${this.props.name}_${songNumber}`
+    const SongSpanNumbers = () => this.props.datasource.map((songNumber, index) => {
+      const key = `${index}_${songNumber}`
       return (
         <SongSpanNumber key={key}>{songNumber}</SongSpanNumber>
       )
