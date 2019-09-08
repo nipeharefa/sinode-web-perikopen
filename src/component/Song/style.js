@@ -6,6 +6,7 @@ const Song = styled.div`
 `;
 
 const SongName = styled.div`
+  font-size: 12px;
 `;
 
 const SongSpanContainer = styled.div`
@@ -15,6 +16,7 @@ const SongSpanContainer = styled.div`
 const SongSpanNumber = styled.span`
   margin: 0 10px 0 10px;
   text-align: center;
+  font-size: 12px;
 `;
 
 const Styled = {

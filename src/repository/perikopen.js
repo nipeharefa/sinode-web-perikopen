@@ -10,10 +10,16 @@ const getBZByPerikopen = (httpClient, id) => {
     return httpClient.get(url)
 }
 
+const getPerikopenReadingList = (httpClient, perikopenID) => {
+    const url = `api/perikopens/${perikopenID}/reading_lists`;
+    return httpClient.get(url)
+}
+
 const connectionFactory = (httpClient) => {
     return {
         getKJByPerikopen: (...params)  => getKJByPerikopen(httpClient, ...params),
         getBZByPerikopen: (id) => getBZByPerikopen(httpClient, id),
+        getPerikopenReadingList: (id) => getPerikopenReadingList(httpClient, id)
     }
 }
 

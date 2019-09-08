@@ -1,28 +1,25 @@
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
+import moment from 'moment';
 import React, { Component } from 'react';
 import HomeStyled from './pages/Home/style';
 import { GetPerikopenByDate } from './service/perikopen';
 import DatePicker from './component/DatePicker';
-import { SongList } from './component'
+import { SongList } from './component';
+import Translation from './translation/Translation';
+import ReadingList from './component/ReadingList';
 
 const {
-  ContainerReadlist,
   HeadInfo,
-  Readlist,
   FabButton,
-  InfoDate,
-  BookName,
-  Subsection,
-  Verse,
+  InfoDate
 } = HomeStyled;
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: null,
-      endDate: null,
+      selectedDate: null,
       focused: false,
       activePerikopen: {
         id: 0,
@@ -41,87 +38,66 @@ class App extends Component {
     this.getInitialPerikopen()
   }
   getInitialPerikopen = async() => {
+    const selectedDate = moment("20190101", "YYYYMMDD")
     try {
       const result = await GetPerikopenByDate('2019-01-01 00:00:00')
       if (result.data.length > 0) {
         this.setState({
-          activePerikopen: result.data[0]
+          activePerikopen: result.data[0],
+          selectedDate,
         })
       }
     } catch(e) {}
   }
   handleDatePick = async(x) => {
     try {
-
       const data = x.format('YYYY-MM-DD 00:00:00')
       const result = await GetPerikopenByDate(data)
       if (result.data.length > 0) {
         this.setState({
-          activePerikopen: result.data[0]
+          activePerikopen: result.data[0],
+          selectedDate: x,
         })
       }
     } catch(e) {}
   }
   render() {
-    const arrayBacaan = [
-      {
-        "name": "Markus",
-        "verses": []
-      },
-      {
-        "name": "Matius",
-        "verses": []
-      },
-      {
-        "name": "Kisah Para Rasul",
-        "verses": []
-      },
-      {
-        "name": "Kisah Para Rasul",
-        "verses": [],
-        "isMemorize": true,
-      }
-    ]
+    let dayNumber = "00"
+
+    console.log(this.state)
+    if (null !== this.state.selectedDate) {
+      dayNumber = this.state.selectedDate.format('DD')
+    }
+
     return (
       <div className="App">
-
         <HeadInfo className="uk-flex">
           <InfoDate className="uk-flex uk-flex-column">
-            <span className="uk-text-large uk-text-bold">01</span>
+            <span className="uk-text-large uk-text-bold">{dayNumber}</span>
             <span>JAN</span>
           </InfoDate>
           <div className="uk-flex uk-flex-column uk-height-1-1">
-            <span>{ this.state.activePerikopen.week.code }</span>
-            <span>{ this.state.activePerikopen.worship.key }</span>
+            <span>
+              <Translation translationID={this.state.activePerikopen.week.code} />
+            </span>
+            <span>
+              <Translation translationID={this.state.activePerikopen.worship.key} />
+            </span>
           </div>
         </HeadInfo>
 
         <div>
-          <div>
-            <span>Bahan Bacaan</span>
-            <ContainerReadlist>
-              {arrayBacaan.map(x => (
-                <Readlist
-                  className="uk-flex"
-                  key={x.name.toLowerCase() + Math.random()}>
-                  <BookName>
-                    <span>{ x.name }</span>
-                  </BookName>
-                  <Subsection data-perikopen="subsections">
-                    <span className="uk-text">100</span>
-                  </Subsection>
-                  <Verse>
-                    1 - 11
-                  </Verse>
-                </Readlist>
-              ))}
-            </ContainerReadlist>
-          </div>
+          {/* Bahan Bacaan */}
+          <ReadingList perikopenId={this.state.activePerikopen.id}/>
+          {/* end Bahaan Bacaan */}
 
           {/* SongList Below */}
           <SongList perikopenId={this.state.activePerikopen.id} />
         </div>
-        <FabButton onClick={() => this.setState({ focused: true })}>+</FabButton>
+        <FabButton
+          onClick={() => this.setState({ focused: true })}>
+            +
+        </FabButton>
         <div id="my-id" data-uk-modal="true">
           <div className="uk-modal-dialog uk-modal-body">
               <div>

@@ -17,7 +17,6 @@ class SongList extends React.PureComponent {
     }
   }
   componentDidMount() {
-    // Fungsi()
     this.getSonglist();
   }
 
