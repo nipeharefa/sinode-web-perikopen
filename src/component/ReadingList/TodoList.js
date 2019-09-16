@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Repository from '../../repository';
 import Style from './style';
 import Translation from '../../translation/Translation';
+import VerseComponent from './Verse';
 
 const {
   BookName,
@@ -58,7 +59,8 @@ class ReadingList extends React.PureComponent {
                 <span className="uk-text">100</span>
               </Subsection>
               <Verse>
-                1 - 11
+                {/* {x.fromVerse} - {x.toVerse} */}
+                <VerseComponent {...x}/>
               </Verse>
             </ReadList>
             ))}
