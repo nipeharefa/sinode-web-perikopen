@@ -1,15 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import loadable from '@loadable/component';
+import moment from 'moment';
 import UIkit from 'uikit';
-import Icons from 'uikit/dist/js/uikit-icons';
 
 import './index.css';
 import 'uikit/dist/css/uikit.min.css';
-import App from './App';
+// import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-// loads the Icon plugin
-UIkit.use(Icons);
+const App = loadable(() => import(/* webpackChunkName: "App" */'./App'));
+
+import(/* webpackChunkName: "moment_id_locale" */ 'moment/locale/id')
+    .then(() => {
+        moment.locale('id');
+    });
+
+import(/* webpackChunkName: "UIKitIcon" */ 'uikit/dist/js/uikit-icons')
+    .then((Icons) => {
+        UIkit.use(Icons.default);
+    });
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

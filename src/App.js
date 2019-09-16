@@ -1,13 +1,15 @@
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import moment from 'moment';
+import loadable from '@loadable/component';
 import React, { Component } from 'react';
 import HomeStyled from './pages/Home/style';
 import { GetPerikopenByDate } from './service/perikopen';
-import DatePicker from './component/DatePicker';
 import { SongList } from './component';
-import Translation from './translation/Translation';
-import ReadingList from './component/ReadingList';
+
+const Translation = loadable(() => import(/* webpackChunkName: "Translation" */ './translation/Translation'));
+const DatePicker = loadable(() => import(/* webpackChunkName: "DatePicker" */ './component/DatePicker'));
+const ReadingList = loadable(() => import(/* webpackChunkName: "ReadingList" */ './component/ReadingList'));
 
 const {
   HeadInfo,
@@ -62,11 +64,13 @@ class App extends Component {
     } catch(e) {}
   }
   render() {
-    let dayNumber = "00"
+    let dayNumber = "00";
+    let monthName = "";
 
     console.log(this.state)
     if (null !== this.state.selectedDate) {
       dayNumber = this.state.selectedDate.format('DD')
+      monthName = this.state.selectedDate.format('MMM')
     }
 
     return (
@@ -74,7 +78,7 @@ class App extends Component {
         <HeadInfo className="uk-flex">
           <InfoDate className="uk-flex uk-flex-column">
             <span className="uk-text-large uk-text-bold">{dayNumber}</span>
-            <span>JAN</span>
+            <span>{monthName}</span>
           </InfoDate>
           <div className="uk-flex uk-flex-column uk-height-1-1">
             <span>

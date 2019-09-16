@@ -1,9 +1,11 @@
 import * as React from 'react';
+import loadable from '@loadable/component';
 import PropTypes from 'prop-types';
 import Repository from '../../repository';
 import Style from './style';
-import Translation from '../../translation/Translation';
-import VerseComponent from './Verse';
+
+const Translation = loadable(() => import('../../translation/Translation'));
+const VerseComponent = loadable(() => import(/* webpackChunkName: "Verse" */ './Verse'));
 
 const {
   BookName,
@@ -35,7 +37,6 @@ class ReadingList extends React.PureComponent {
       const id = this.props.perikopenId;
 
       const { data } = await getPerikopenReadingList(id);
-      // console.log(data)
       this.setState({
         readingList: data,
       })
@@ -59,7 +60,6 @@ class ReadingList extends React.PureComponent {
                 <span className="uk-text">100</span>
               </Subsection>
               <Verse>
-                {/* {x.fromVerse} - {x.toVerse} */}
                 <VerseComponent {...x}/>
               </Verse>
             </ReadList>
