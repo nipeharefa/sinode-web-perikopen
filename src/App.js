@@ -67,7 +67,6 @@ class App extends Component {
     let dayNumber = "00";
     let monthName = "";
 
-    console.log(this.state)
     if (null !== this.state.selectedDate) {
       dayNumber = this.state.selectedDate.format('DD')
       monthName = this.state.selectedDate.format('MMM')
@@ -80,7 +79,7 @@ class App extends Component {
             <span className="uk-text-large uk-text-bold">{dayNumber}</span>
             <span>{monthName}</span>
           </InfoDate>
-          <div className="uk-flex uk-flex-column uk-height-1-1">
+          <div className="uk-flex uk-flex-column">
             <span>
               <Translation translationID={this.state.activePerikopen.week.code} />
             </span>
@@ -98,19 +97,21 @@ class App extends Component {
           {/* SongList Below */}
           <SongList perikopenId={this.state.activePerikopen.id} />
         </div>
+        
         <FabButton
           onClick={() => this.setState({ focused: true })}>
-            +
+            <span uk-icon="calendar"></span>
         </FabButton>
+
         <div id="my-id" data-uk-modal="true">
           <div className="uk-modal-dialog uk-modal-body">
-              <div>
+              <React.Fragment>
                 <DatePicker
                   onFocusChange={({focused}) => { this.setState({ focused })}}
                   handleDatePick={this.handleDatePick}
                   focused={this.state.focused}
                 />
-              </div>
+              </React.Fragment>
           </div>
         </div>
       </div>

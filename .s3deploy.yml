@@ -1,0 +1,13 @@
+routes:
+  - route: 'static\/(css|js)\/.+(css|js)'
+  # - route: "^static\\.+\\.(js|css|svg|ttf)$"
+    #  cache static assets for 20 years
+    headers:
+      Cache-Control: "max-age=31556926, no-transform, public"
+    gzip: true
+  - route: "^service-worker.js"
+    headers:
+      Cache-Control: "max-age=0, public"
+  - route: "^.+\\.(png|jpg)$"
+    headers:
+      Cache-Control: "max-age=630720000, no-transform, public"

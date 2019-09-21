@@ -4,9 +4,9 @@ import loadable from '@loadable/component';
 import moment from 'moment';
 import UIkit from 'uikit';
 
+import './App.css';
 import './index.css';
 import 'uikit/dist/css/uikit.min.css';
-// import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 const App = loadable(() => import(/* webpackChunkName: "App" */'./App'));

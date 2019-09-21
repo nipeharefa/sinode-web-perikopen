@@ -7,9 +7,8 @@ const getPerikpenByDate = async (date) => {
             'Accept': 'application/json',
         },
     }
-    const res = axios.get(url, requestConfig)
-    // return url;
-    return res
+    
+    return axios.get(url, requestConfig)
 }
 
 

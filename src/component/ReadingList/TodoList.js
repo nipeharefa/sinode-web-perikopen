@@ -45,7 +45,7 @@ class ReadingList extends React.PureComponent {
   render() {
     return (
       <React.Fragment>
-        <span>Bahan Bacaan</span>
+        {/* <span>Bahan Bacaan</span> */}
         <ContainerReadlist>
           {this.state.readingList.map(x => (
             <ReadList
