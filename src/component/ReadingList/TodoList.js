@@ -57,7 +57,7 @@ class ReadingList extends React.PureComponent {
                 </span>
               </BookName>
               <Subsection data-perikopen="subsections">
-                <span className="uk-text">100</span>
+                <span className="uk-text">{x.section}</span>
               </Subsection>
               <Verse>
                 <VerseComponent {...x}/>

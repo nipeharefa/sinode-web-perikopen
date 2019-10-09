@@ -63,7 +63,7 @@ class SongList extends React.PureComponent {
     const bzDataSource = this.state.bzDataSource.map(kj => kj.bukuZinuno.songNumber)
     return(
       <SongContainer>
-        <span>Kidung Pujian</span>
+        {/* <span>Kidung Pujian</span> */}
         <Song name="Kidung Jemaat" datasource={kjDataSource}/>
         <Song name="Buku Zinuno" datasource={bzDataSource}/>
       </SongContainer>

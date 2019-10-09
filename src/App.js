@@ -99,6 +99,7 @@ class App extends Component {
         </div>
         
         <FabButton
+          aria-label="Select calendar button"
           onClick={() => this.setState({ focused: true })}>
             <span uk-icon="calendar"></span>
         </FabButton>
