@@ -1,153 +1,118 @@
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
+import moment from 'moment';
+import loadable from '@loadable/component';
 import React, { Component } from 'react';
-import UIkit from 'uikit';
-import { SingleDatePicker } from 'react-dates';
 import HomeStyled from './pages/Home/style';
-import "./App.css"
+import { GetPerikopenByDate } from './service/perikopen';
+import { SongList } from './component';
+
+const Translation = loadable(() => import(/* webpackChunkName: "Translation" */ './translation/Translation'));
+const DatePicker = loadable(() => import(/* webpackChunkName: "DatePicker" */ './component/DatePicker'));
+const ReadingList = loadable(() => import(/* webpackChunkName: "ReadingList" */ './component/ReadingList'));
 
 const {
-  ContainerReadlist,
   HeadInfo,
-  Readlist,
   FabButton,
-  InfoDate,
-  BookName,
-  SongSpanContainer,
-  SongContainer,
-  SongName,
-  Song,
-  SongSpanNumber,
-  Subsection,
-  Verse,
+  InfoDate
 } = HomeStyled;
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: null,
-      endDate: null,
+      selectedDate: null,
       focused: false,
+      activePerikopen: {
+        id: 0,
+        week: {
+          id: 0,
+          code: "new_year"
+        },
+        worship: {
+          id: 0,
+          key: 'new_year'
+        }
+      },
     };
   }
   componentDidMount() {
-    // console.log(UIkit.modal('#my-id'));
+    this.getInitialPerikopen()
   }
-  handleDatePick = async() => {
-    // console.log()
-    // alert();
-    UIkit.modal('#my-id').hide();
+  getInitialPerikopen = async() => {
+    const selectedDate = moment("20190101", "YYYYMMDD")
+    try {
+      const result = await GetPerikopenByDate('2019-01-01 00:00:00')
+      if (result.data.length > 0) {
+        this.setState({
+          activePerikopen: result.data[0],
+          selectedDate,
+        })
+      }
+    } catch(e) {}
+  }
+  handleDatePick = async(x) => {
+    try {
+      const data = x.format('YYYY-MM-DD 00:00:00')
+      const result = await GetPerikopenByDate(data)
+      if (result.data.length > 0) {
+        this.setState({
+          activePerikopen: result.data[0],
+          selectedDate: x,
+        })
+      }
+    } catch(e) {}
   }
   render() {
-    const arrayBacaan = [
-      {
-        "name": "Markus",
-        "verses": []
-      },
-      {
-        "name": "Matius",
-        "verses": []
-      },
-      {
-        "name": "Kisah Para Rasul",
-        "verses": []
-      },
-      {
-        "name": "Kisah Para Rasul",
-        "verses": [],
-        "isMemorize": true,
-      }
-    ]
+    let dayNumber = "00";
+    let monthName = "";
+
+    if (null !== this.state.selectedDate) {
+      dayNumber = this.state.selectedDate.format('DD')
+      monthName = this.state.selectedDate.format('MMM')
+    }
+
     return (
       <div className="App">
-
         <HeadInfo className="uk-flex">
           <InfoDate className="uk-flex uk-flex-column">
-            <span className="uk-text-large uk-text-bold">01</span>
-            <span>JAN</span>
+            <span className="uk-text-large uk-text-bold">{dayNumber}</span>
+            <span>{monthName}</span>
           </InfoDate>
-          <div className="uk-flex uk-flex-column uk-height-1-1">
-            <span>Tahun Baru</span>
-            <span>Ephipanias</span>
+          <div className="uk-flex uk-flex-column">
+            <span>
+              <Translation translationID={this.state.activePerikopen.week.code} />
+            </span>
+            <span>
+              <Translation translationID={this.state.activePerikopen.worship.key} />
+            </span>
           </div>
         </HeadInfo>
 
         <div>
-          <div>
-            <span>Bahan Bacaan</span>
-            <ContainerReadlist>
-              {arrayBacaan.map(x => (
-                <Readlist
-                  className="uk-flex"
-                  key={x.name.toLowerCase() + Math.random()}>
-                  <BookName>
-                    <span>{ x.name }</span>
-                  </BookName>
-                  <Subsection data-perikopen="subsections">
-                    <span className="uk-text">100</span>
-                  </Subsection>
-                  <Verse>
-                    1 - 11
-                  </Verse>
-                </Readlist>
-              ))}
-            </ContainerReadlist>
-          </div>
-          <SongContainer>
-            <span>Kidung Pujian</span>
-            {/* Kidung Jemaat */}
-            <Song className="uk-flex">
-              <SongName className="uk-width-2-3">
-                <span>Kidung Jemaat</span>
-              </SongName>
-              <SongSpanContainer className="uk-flex uk-width-1-1">
-                <SongSpanNumber>10</SongSpanNumber>
-                <SongSpanNumber>10</SongSpanNumber>
-                <SongSpanNumber>10</SongSpanNumber>
-                <SongSpanNumber>10</SongSpanNumber>
-              </SongSpanContainer>
-            </Song>
-            {/* Buku Zinuno */}
-            <Song className="uk-flex">
-              <SongName className="uk-width-2-3">
-                <span>Buku Zinuno</span>
-              </SongName>
-              <SongSpanContainer className="uk-flex uk-width-1-1">
-                <SongSpanNumber>9</SongSpanNumber>
-                <SongSpanNumber>9</SongSpanNumber>
-                <SongSpanNumber>9</SongSpanNumber>
-                <SongSpanNumber>9</SongSpanNumber>
-                <SongSpanNumber>9</SongSpanNumber>
-                <SongSpanNumber>9</SongSpanNumber>
-              </SongSpanContainer>
-            </Song>
-          </SongContainer>
+          {/* Bahan Bacaan */}
+          <ReadingList perikopenId={this.state.activePerikopen.id}/>
+          {/* end Bahaan Bacaan */}
+
+          {/* SongList Below */}
+          <SongList perikopenId={this.state.activePerikopen.id} />
         </div>
-        <FabButton onClick={() => this.setState({ focused: true })}>+</FabButton>
+        
+        <FabButton
+          aria-label="Select calendar button"
+          onClick={() => this.setState({ focused: true })}>
+            <span uk-icon="calendar"></span>
+        </FabButton>
+
         <div id="my-id" data-uk-modal="true">
           <div className="uk-modal-dialog uk-modal-body">
-              <h2 className="uk-modal-title">Headline</h2>
-              <p>Lorem ipsum dolor sit amet, .</p>
-              <div>
-                <SingleDatePicker
-          date={this.state.startDate}
-          onDateChange={(x) => console.log(x)}
-          focused={this.state.focused}
-          onFocusChange={({focused}) => { this.setState({ focused })}}
-          id="your_unique_id"
-          enableOutsideDays={false}
-          numberOfMonths={1}
-          withFullScreenPortal={true}
-        />
-
-              </div>
-              <p className="uk-text-right">
-                  <button
-                    onClick={this.handleDatePick}
-                    className="uk-button uk-button-primary"
-                    type="button">Save</button>
-              </p>
+              <React.Fragment>
+                <DatePicker
+                  onFocusChange={({focused}) => { this.setState({ focused })}}
+                  handleDatePick={this.handleDatePick}
+                  focused={this.state.focused}
+                />
+              </React.Fragment>
           </div>
         </div>
       </div>
